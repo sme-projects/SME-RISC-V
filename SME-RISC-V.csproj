@@ -30,26 +30,26 @@
     <ItemGroup>
         <Reference Include="System" />
         <Reference Include="SME">
-            <HintPath>packages\SME.0.3.3-beta\lib\net45\SME.dll</HintPath>
+            <HintPath>packages\SME.0.3.2\lib\net45\SME.dll</HintPath>
         </Reference>
         <Reference Include="SME.GraphViz">
-            <HintPath>packages\SME.GraphViz.0.3.3-beta\lib\net45\SME.GraphViz.dll</HintPath>
+            <HintPath>packages\SME.GraphViz.0.3.2\lib\net45\SME.GraphViz.dll</HintPath>
         </Reference>
         <Reference Include="SME.VHDL">
-            <HintPath>packages\SME.VHDL.0.3.3-beta\lib\net45\SME.VHDL.dll</HintPath>
+            <HintPath>packages\SME.VHDL.0.3.2\lib\net45\SME.VHDL.dll</HintPath>
         </Reference>
         <Reference Include="SME.Tracer">
-            <HintPath>packages\SME.Tracer.0.3.3-beta\lib\net45\SME.Tracer.dll</HintPath>
+            <HintPath>packages\SME.Tracer.0.3.2\lib\net45\SME.Tracer.dll</HintPath>
         </Reference>
         <Reference Include="SME.AST">
-            <HintPath>packages\SME.AST.0.3.3-beta\lib\net45\SME.AST.dll</HintPath>
+            <HintPath>packages\SME.AST.0.3.2\lib\net45\SME.AST.dll</HintPath>
         </Reference>
         <Reference Include="SME.CPP">
-            <HintPath>packages\SME.CPP.0.3.3-beta\lib\net45\SME.CPP.dll</HintPath>
+            <HintPath>packages\SME.CPP.0.3.2\lib\net45\SME.CPP.dll</HintPath>
         </Reference>
-        <Reference Include="SME.Components">
-            <HintPath>packages\SME.Components.0.3.3-beta\lib\net45\SME.Components.dll</HintPath>
-        </Reference>
+        <!--<Reference Include="SME.Components">
+            <HintPath>packages\SME.Components.0.3.2\lib\net45\SME.Components.dll</HintPath>
+        </Reference> -->
         <Reference Include="Castle.Core">
             <HintPath>packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
         </Reference>
@@ -64,7 +64,13 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="*.cs"/>
+        <Compile Include="EX.cs"/>
+        <Compile Include="ID.cs"/>
+        <Compile Include="IF.cs"/>
+        <Compile Include="MEM.cs"/>
+        <Compile Include="Program.cs"/>
+        <Compile Include="Testers.cs"/>
+        <Compile Include="WB.cs"/>
     </ItemGroup>
     <ItemGroup>
         <None Include="SME-RISC-V.csproj" />
