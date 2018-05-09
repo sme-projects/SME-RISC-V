@@ -1,6 +1,6 @@
 ﻿using SME;
 
-namespace SingleCycleMIPS
+namespace RISCV
 {
     public enum Opcodes : int
     {

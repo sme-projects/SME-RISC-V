@@ -1,7 +1,7 @@
 ﻿using System;
 using SME;
 
-namespace SingleCycleMIPS
+namespace RISCV
 {
     [InitializedBus]
     public interface Instruction : IBus

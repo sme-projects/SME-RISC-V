@@ -2,7 +2,7 @@
 using SME;
 using System.Threading.Tasks;
 
-namespace SingleCycleMIPS
+namespace RISCV
 {
     [InitializedBus,]
     public interface MemRead : IBus

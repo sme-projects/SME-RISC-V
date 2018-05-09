@@ -1,7 +1,7 @@
 ﻿using System;
 using SME;
 
-namespace SingleCycleMIPS
+namespace RISCV
 {
 	// Values taken from MIPS reference data card from the book
 	public enum Funcs
