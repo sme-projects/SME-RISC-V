@@ -2,7 +2,44 @@ using System;
 
 namespace RISCV 
 {
-    // Values taken from MIPS reference data card from the book
+    public enum ALUOpcodes
+    {
+        RFormat,
+        sub,
+        add,
+        addu,
+        and,
+        or,
+        xor,
+        slt,
+        sltu,
+    }
+    
+    public enum ALUOps
+	{
+		and,
+		or,
+		add,
+		sl,
+		sr,
+		sra,
+		sub,
+		slt,
+		addu,
+		subu,
+		mult,
+		multu,
+		nor,
+		div,
+		divu,
+		xor,
+		mtlo,
+		mthi,
+		mflo,
+		mfhi,
+		sltu,
+	};
+
 	public enum Funcs
 	{
 		sll,
@@ -69,32 +106,7 @@ namespace RISCV
         ignore_61,
         ignore_62,
         ignore_63,
-    };
-
-	public enum ALUOps
-	{
-		and,
-		or,
-		add,
-		sl,
-		sr,
-		sra,
-		sub,
-		slt,
-		addu,
-		subu,
-		mult,
-		multu,
-		nor,
-		div,
-		divu,
-		xor,
-		mtlo,
-		mthi,
-		mflo,
-		mfhi,
-		sltu,
-	};
+    }
 
     public enum Opcodes : int
     {
@@ -162,18 +174,5 @@ namespace RISCV
         sdc1 = 61,
         sdc2 = 62,
         ignore_63,
-    }
-
-    public enum ALUOpcodes
-    {
-        RFormat,
-        sub,
-        add,
-        addu,
-        and,
-        or,
-        xor,
-        slt,
-        sltu,
     }
 }
