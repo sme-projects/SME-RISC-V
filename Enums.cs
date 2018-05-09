@@ -13,7 +13,7 @@ namespace RISCV
         xor,
         slt,
         sltu,
-    }
+    };
     
     public enum ALUOps
 	{
@@ -106,7 +106,7 @@ namespace RISCV
         ignore_61,
         ignore_62,
         ignore_63,
-    }
+    };
 
     public enum Opcodes : int
     {

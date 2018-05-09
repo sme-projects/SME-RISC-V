@@ -67,6 +67,7 @@
         <Compile Include="EX.cs"/>
         <Compile Include="ID.cs"/>
         <Compile Include="IF.cs"/>
+        <Compile Include="Enums.cs"/>
         <Compile Include="MEM.cs"/>
         <Compile Include="Program.cs"/>
         <Compile Include="Testers.cs"/>
