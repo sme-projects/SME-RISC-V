@@ -101,8 +101,8 @@ namespace RISCV
         jalr      = 0b1100111,
         jal       = 0b1101111,
         synch     = 0b0001111, // fence
-        imm_word  = 0b0011011,
-        r_word    = 0b0111011,
+        //imm_word  = 0b0011011, // TODO RV64I
+        //r_word    = 0b0111011,
         lui       = 0b0110111,
         auipc     = 0b0010111,
     };
