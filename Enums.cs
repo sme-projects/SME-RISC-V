@@ -81,6 +81,16 @@ namespace RISCV
         fencei
     };
 
+    public enum InstructionFormat
+    {
+        r,
+        i,
+        s,
+        b,
+        u,
+        j
+    };
+
     public enum Opcodes
     {
         load      = 0b0000011,
