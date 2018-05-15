@@ -183,7 +183,7 @@ namespace RISCV
         [OutputBus]
         Imm imm;
 
-        protected override void OnTick()
+        protected override void OnTick() // TODO mere manuel
         {
             switch (format.val)
             {
@@ -194,7 +194,7 @@ namespace RISCV
                     UInt5 fourone = (UInt5)(imm5.val & 0b11110);
                     int twelve = imm7.val >> 6 & 1;
                     UInt6 tenfive = (UInt6)(imm7.val & 0b0111111);
-                    imm.val = (int) ((twelve == 1 ? 0 : 0xFFFFF000) |
+                    imm.val = (int) ((twelve == 1 ? 0 : unchecked((int)0xFFFFF000)) |
                         (eleven << 11) |
                         (tenfive << 5) |
                         fourone);
@@ -205,7 +205,7 @@ namespace RISCV
                     int tenone = (int)((imm20.val >> 9) & 0x1FF);
                     int eleven = (int)((imm20.val >> 8) & 1);
                     int nineteentwelve = (int)((imm20.val) & 0b11111111);
-                    imm.val = (int) ((twenty == 1 ? 0 : 0xFFF00000) |
+                    imm.val = (int) ((twenty == 1 ? 0 : unchecked((int)0xFFF00000)) |
                         (nineteentwelve << 12) |
                         (eleven << 11) |
                         (tenone << 1)
@@ -231,6 +231,8 @@ namespace RISCV
         MemRead mr;
         [OutputBus]
         MemWrite mw;
+        [OutputBus]
+        RegWrite rw;
 
         protected override void OnTick()
         {
@@ -238,22 +240,23 @@ namespace RISCV
             ALUOps alu = ALUOps.add;
             switch (opcode.val)
             {
-                case Opcodes.auipc:     flags = 0b0011; alu = ALUOps.add; format.val = InstructionFormat.u; break;
-                case Opcodes.branches:  flags = 0b0000; alu = ALUOps.add; format.val = InstructionFormat.b; break;
-                case Opcodes.immediate: flags = 0b0001; alu = ALUOps.add; format.val = InstructionFormat.i; break;
-                case Opcodes.jal:       flags = 0b0001; alu = ALUOps.add; format.val = InstructionFormat.j; break;
-                case Opcodes.jalr:      flags = 0b0000; alu = ALUOps.add; format.val = InstructionFormat.j; break;
-                case Opcodes.load:      flags = 0b1000; alu = ALUOps.add; format.val = InstructionFormat.i; break;
-                case Opcodes.lui:       flags = 0b0001; alu = ALUOps.add; format.val = InstructionFormat.u; break;
-                case Opcodes.rformat:   flags = 0b0000; alu = ALUOps.add; format.val = InstructionFormat.r; break;
-                case Opcodes.store:     flags = 0b0101; alu = ALUOps.add; format.val = InstructionFormat.s; break;
-                case Opcodes.synch:     flags = 0b0001; alu = ALUOps.add; format.val = InstructionFormat.i; break;
+                case Opcodes.auipc:     flags = 0b10011; format.val = InstructionFormat.u; break;
+                case Opcodes.branches:  flags = 0b00000; format.val = InstructionFormat.b; break;
+                case Opcodes.immediate: flags = 0b10001; format.val = InstructionFormat.i; break;
+                case Opcodes.jal:       flags = 0b10001; format.val = InstructionFormat.j; break;
+                case Opcodes.jalr:      flags = 0b10000; format.val = InstructionFormat.j; break;
+                case Opcodes.load:      flags = 0b11000; format.val = InstructionFormat.i; break;
+                case Opcodes.lui:       flags = 0b10001; format.val = InstructionFormat.u; break;
+                case Opcodes.rformat:   flags = 0b10000; format.val = InstructionFormat.r; break;
+                case Opcodes.store:     flags = 0b00101; format.val = InstructionFormat.s; break;
+                case Opcodes.synch:     flags = 0b00001; format.val = InstructionFormat.i; break;
             }
 
             ias2.flg  = ((flags >> 0) & 1) == 1;
             pcas1.flg = ((flags >> 1) & 1) == 1;
-            mr.flg = ((flags >> 2) & 1) == 1;
-            mw.flg = ((flags >> 2) & 1) == 1;
+            mr.flg    = ((flags >> 2) & 1) == 1;
+            mw.flg    = ((flags >> 3) & 1) == 1;
+            rw.flg    = ((flags >> 4) & 1) == 1;
         }
     }
 

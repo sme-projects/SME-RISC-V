@@ -23,7 +23,7 @@ namespace RISCV
         [InputBus]
         MemRead memread;
         [InputBus]
-        JALOut addr;
+        ALUResult addr;
         [InputBus]
         Register2 write;
 
@@ -56,16 +56,16 @@ namespace RISCV
         [InputBus]
         ReadData mem;
         [InputBus]
-        JALOut jal;
+        ALUResult aluresult;
         [InputBus]
-        MemToReg memtoreg;
+        MemRead memtoreg;
 
         [OutputBus]
         MemOut output;
 
         protected override void OnTick()
         {
-            output.data = memtoreg.flg ? mem.data : jal.val;
+            output.data = memtoreg.flg ? mem.data : aluresult.val;
         }
     }
 }
