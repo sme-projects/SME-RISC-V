@@ -1,4 +1,5 @@
 ﻿using SME;
+using SME.VHDL;
 
 namespace RISCV
 {
@@ -99,52 +100,105 @@ namespace RISCV
         byte amount { get; set; }
     }
 
+    [InitializedBus]
+    public interface Funct3 : IBus 
+    {
+        UInt3 val { get; set; }
+    }
+
+    [InitializedBus]
+    public interface Funct7 : IBus 
+    {
+        UInt7 val { get; set; }
+    }
+
+    [InitializedBus]
+    public interface Imm5
+    {
+        UInt5 val { get; set; }
+    }
+
+    [InitializedBus]
+    public interface Imm7
+    {
+        UInt7 val { get; set; }
+    }
+    
+    [InitializedBus]
+    public interface Imm12
+    {
+        UInt12 val { get; set; }
+    }
+    
+    [InitializedBus]
+    public interface Imm20
+    {
+        UInt20 val { get; set; }
+    }
+
+    [InitializedBus]
+    public interface Opcode : IBus 
+    {
+        Opcodes val { get; set; }
+    }
+
+    [InitializedBus]
+    public interface Rd : IBus 
+    {
+        UInt5 index { get; set; }
+    }
+
+    [InitializedBus]
+    public interface Rs1 : IBus 
+    {
+        UInt5 index { get; set; }
+    }
+
+    [InitializedBus]
+    public interface Rs2 : IBus 
+    {
+        UInt5 index { get; set; }
+    }
+
     public class Splitter : SimpleProcess
     {
         [InputBus]
         Instruction instr;
 
         [OutputBus]
-        ReadA readA;
+        Funct7 funct7;
         [OutputBus]
-        ReadB readB;
+        Rs2 rs2;
         [OutputBus]
-        SignExtIn signExt;
+        Rs1 rs1;
         [OutputBus]
-        ControlIn control;
+        Funct3 funct3;
         [OutputBus]
-        MuxInput mux;
+        Rd rd;
         [OutputBus]
-        ALUFunct aluFunct;
+        Opcode opcode;
         [OutputBus]
-        JumpInstruction jump;
+        Imm12 imm12;
         [OutputBus]
-        Shamt shmt;
+        Imm7 imm7;
+        [OutputBus]
+        Imm5 imm5;
+        [OutputBus]
+        Imm20 imm20;
 
         protected override void OnTick()
         {
-            uint tmp = instr.instruction;
-            Opcodes opcode = (Opcodes)((tmp >> 26) & 0x3F);
-            byte rs = (byte)((tmp >> 21) & 0x1F);
-            byte rt = (byte)((tmp >> 16) & 0x1F);
-            byte rd = (byte)((tmp >> 11) & 0x1F);
-            byte shamt = (byte)((tmp >> 6) & 0x1F);
-            Funcs funct = (Funcs)(tmp & 0x3F);
-            uint addr = (uint)(tmp & 0x03FFFFFF); // Last 25 bit
-            short ext = (short)(tmp & 0xFFFF); // Last 16 bit
-
-            /*TODO der er problemer med Opcodes og Funcs enum i vhdl!
-            De bliver ikke sat til det samme som i c#!*/
-
-            shmt.amount = shamt;
-            readA.addr = rs;
-            readB.addr = rt;
-            mux.rd = rd;
-            mux.rt = rt;
-            control.opcode = opcode;
-            signExt.data = ext;
-            aluFunct.val = funct;
-            jump.addr = addr;
+            uint tmp   = instr.instruction;
+            funct7.val = (UInt7)  ((tmp >> 25) & 0b1111111);
+            rs2.index  = (UInt5)  ((tmp >> 20) & 0b11111);
+            rs1.index  = (UInt5)  ((tmp >> 15) & 0b11111);
+            funct3.val = (UInt3)  ((tmp >> 12) & 0b111);
+            rd.index   = (UInt5)  ((tmp >> 7)  & 0b11111);
+            opcode.val = (Opcodes) (tmp        & 0b1111111);
+            imm12.val  = (UInt12) ((tmp >> 20) & 0b111111111111);
+            imm7.val   = (UInt7)  ((tmp >> 25) & 0b1111111);
+            imm5.val   = (UInt5)  ((tmp >> 7)  & 0b11111);
+            imm20.val  = (UInt20) ((tmp >> 12) & 0b11111111111111111111);
         }
     }
 
