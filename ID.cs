@@ -52,9 +52,39 @@ namespace RISCV
     }
 
     [InitializedBus]
+    public interface ImmAsSource2 : IBus 
+    {
+        bool flg { get; set; }
+    }
+
+    [InitializedBus]
     public interface Opcode : IBus 
     {
         Opcodes val { get; set; }
+    }
+
+    [InitializedBus]
+    public interface MemRead : IBus 
+    {
+        bool flg { get; set; }
+    }
+
+    [InitializedBus]
+    public interface MemWrite : IBus 
+    {
+        bool flg { get; set; }
+    }
+
+    [InitializedBus]
+    public interface PCAsSource1 : IBus 
+    {
+        bool flg { get; set; }
+    }
+
+    [InitializedBus]
+    public interface Rd : IBus 
+    {
+        UInt5 addr { get; set; }
     }
 
     [InitializedBus]
@@ -69,10 +99,18 @@ namespace RISCV
         uint val { get; set; }
     }
 
-    [InitializedBus]
-    public interface Rd : IBus 
+    [InitializedBus] // From WB to Register file
+    public interface RegWriteBus
     {
+        bool ena { get; set; }
         UInt5 addr { get; set; }
+        uint data { get; set; }
+    }
+
+    [InitializedBus]
+    public interface RegWrite : IBus
+    {
+        bool flg { get; set; }
     }
 
     [InitializedBus]
@@ -189,6 +227,10 @@ namespace RISCV
         PCAsSource1 pcas1;
         [OutputBus]
         ImmAsSource2 ias2;
+        [OutputBus]
+        MemRead mr;
+        [OutputBus]
+        MemWrite mw;
 
         protected override void OnTick()
         {
@@ -196,12 +238,22 @@ namespace RISCV
             ALUOps alu = ALUOps.add;
             switch (opcode.val)
             {
-                case Opcodes.auipc: flags = 0b11; alu = ALUOps.add; break;
-                case Opcodes.branches: 
+                case Opcodes.auipc:     flags = 0b0011; alu = ALUOps.add; format.val = InstructionFormat.u; break;
+                case Opcodes.branches:  flags = 0b0000; alu = ALUOps.add; format.val = InstructionFormat.b; break;
+                case Opcodes.immediate: flags = 0b0001; alu = ALUOps.add; format.val = InstructionFormat.i; break;
+                case Opcodes.jal:       flags = 0b0001; alu = ALUOps.add; format.val = InstructionFormat.j; break;
+                case Opcodes.jalr:      flags = 0b0000; alu = ALUOps.add; format.val = InstructionFormat.j; break;
+                case Opcodes.load:      flags = 0b1000; alu = ALUOps.add; format.val = InstructionFormat.i; break;
+                case Opcodes.lui:       flags = 0b0001; alu = ALUOps.add; format.val = InstructionFormat.u; break;
+                case Opcodes.rformat:   flags = 0b0000; alu = ALUOps.add; format.val = InstructionFormat.r; break;
+                case Opcodes.store:     flags = 0b0101; alu = ALUOps.add; format.val = InstructionFormat.s; break;
+                case Opcodes.synch:     flags = 0b0001; alu = ALUOps.add; format.val = InstructionFormat.i; break;
             }
 
+            ias2.flg  = ((flags >> 0) & 1) == 1;
             pcas1.flg = ((flags >> 1) & 1) == 1;
-            ias2.flg = ((flags >> 0) & 1) == 1;
+            mr.flg = ((flags >> 2) & 1) == 1;
+            mw.flg = ((flags >> 2) & 1) == 1;
         }
     }
 
@@ -212,11 +264,7 @@ namespace RISCV
         [InputBus]
         Rs2 rs2;
         [InputBus]
-        WriteEnabled regWrite;
-        [InputBus]
-        Rd rd;
-        [InputBus]
-        WriteData writeData;
+        RegWriteBus regwrite;
 
         [OutputBus]
         Register1 register1;
@@ -227,9 +275,9 @@ namespace RISCV
 
         protected override void OnTick()
         {
-            if (regWrite.flg && writeAddr.val > 0)
+            if (regwrite.ena && regwrite.addr > 0)
             {
-                data[writeAddr.val] = writeData.data;
+                data[regwrite.addr] = regwrite.data;
             }
             register1.val = data[rs1.addr];
             register2.val = data[rs2.addr];
