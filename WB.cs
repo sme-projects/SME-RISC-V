@@ -26,17 +26,13 @@ namespace RISCV
         RegWrite regwriteIn;
 
         [OutputBus]
-        WriteAddr addrOut;
-        [OutputBus]
-        WriteData dataOut;
-        [OutputBus]
-        WriteEnabled regwriteOut;
+        RegWriteBus regwrite;
 
         protected override void OnTick()
         {
-            addrOut.val = addrIn.addr;
-            dataOut.data = dataIn.data;
-            regwriteOut.flg = regwriteIn.flg;
+            regwrite.ena = regwriteIn.flg;
+            regwrite.addr = addrIn.addr;
+            regwrite.data = dataIn.data;
         }
     }
 }
